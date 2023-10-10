@@ -1,11 +1,3 @@
-# CS2_HW6
-
-You will do this homework in teams of 3-4 students.  You can work with the same students from HW 5 or pick a new team of students you haven't worked with. Note that, if you do not work in teams you will lose up to 50% of the grade (you may NOT work individually).
-
-## Introduction
-In class, we used a stack to evaluate post-fix expressions in calculations.  The code to read in post-fix expressions and evaluate them is shown below.  Please revise the code to evaluate prefix expressions.  Note, you are welcome to look up how to do it on the internet AND you are welcome to get the items from the list of expressions in reverse order.
-
-## The Code
 #include <iostream>
 #include <string>
 #include <list>
@@ -198,5 +190,3 @@ int main() {
     }
     return 0;
 }
-## What to Submit
-Submit your solution as a CPP file with your first and last name included in the file as a comment and the names of your teammates.   Add a long comment in your code showing examples of your code correctly calculating the results. 
