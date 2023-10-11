@@ -1,3 +1,27 @@
+//Jane McPheron
+
+//Teammates: Somayeh Najafi, Yassine Berrada, Tianyi Liang 
+
+/*
+jvmcpheron@dyn-10-140-246-187 CS2_HW6 % ./main
+Expression: * 
+2
+9
+;
+* 2 9 ; 
+
+jvmcpheron@dyn-10-140-246-187 CS2_HW6 % ./main
+Expression: *
++
+2
+3
+4
+;
+* + 2 3 4 ; 
+Result is 20
+
+*/
+
 #include <iostream>
 #include <string>
 #include <list>
@@ -129,10 +153,12 @@ void evalPostfixExpr(list<ExpressionPart*> expressions) {
                         cout << "Result is " << ((ExpressionNumber*) res)->getNumber() << endl;
                     }
                     else {
+                        cout <<"1";
                         throw INFIX_FORMAT_ERROR;
                     }
                 }
                 else {
+                    cout<<"2";
                     throw INFIX_FORMAT_ERROR;
                 }
                 break;
@@ -141,6 +167,7 @@ void evalPostfixExpr(list<ExpressionPart*> expressions) {
                 break;
             case LPAREN:
             case RPAREN:
+                cout<< "3";
                 throw INFIX_FORMAT_ERROR;
                 break;
             case ADD:
@@ -179,12 +206,95 @@ void evalPostfixExpr(list<ExpressionPart*> expressions) {
     }
 }
 
+void evalPrefixExpr(list<ExpressionPart*> expressions) {
+    list<ExpressionPart*> exprStack;
+    for (auto ep = expressions.rbegin(); ep != expressions.rend(); ++ep) {
+        switch ((*ep)->getEType()) {
+            case SEMI:
+                if (exprStack.size() == 1) {
+                    ExpressionPart* res = exprStack.front();
+                    if (res->getEType() == NUMBER) {
+                        cout << "Result is " << ((ExpressionNumber*) res)->getNumber() << endl;
+                    } else {
+                        cout << "1";
+                        throw INFIX_FORMAT_ERROR;
+                    }
+                } else {
+                    
+                }
+                break;
+            case NUMBER:
+                exprStack.push_front(*ep);
+                break;
+            case LPAREN:
+            case RPAREN:
+                cout<<"3";
+                throw INFIX_FORMAT_ERROR;
+                break;
+            case ADD:
+            case MINUS:
+            case TIMES:
+            case DIVIDE:
+            case POWER:
+                if (exprStack.size() < 2) {
+                    cout<<"4";
+                    throw INFIX_FORMAT_ERROR;
+                }
+                ExpressionPart *lft = exprStack.front();
+                exprStack.pop_front();
+                ExpressionPart *rgt = exprStack.front();
+                exprStack.pop_front();
+                if (lft->getEType() != NUMBER || rgt->getEType() != NUMBER) {
+                    cout<<"5";
+                    throw INFIX_FORMAT_ERROR;
+                }
+                double res = 0;
+                switch ((*ep)->getEType()) {
+                    case ADD:
+                        res = ((ExpressionNumber*)lft)->getNumber() + ((ExpressionNumber*)rgt)->getNumber();
+                        break;
+                    case MINUS:
+                        res = ((ExpressionNumber*)lft)->getNumber() - ((ExpressionNumber*)rgt)->getNumber();
+                        break;
+                    case TIMES:
+                        res = ((ExpressionNumber*)lft)->getNumber() * ((ExpressionNumber*)rgt)->getNumber();
+                        break;
+                    case DIVIDE:
+                        res = ((ExpressionNumber*)lft)->getNumber() / ((ExpressionNumber*)rgt)->getNumber();
+                        break;
+                    case POWER:
+                        res = pow(((ExpressionNumber*)lft)->getNumber(), ((ExpressionNumber*)rgt)->getNumber());
+                        break;
+                }
+                exprStack.push_front(new ExpressionNumber(res));
+                break;
+        }
+    }
+
+    if (exprStack.size() == 1) {
+        ExpressionPart* result = exprStack.front();
+        if (result->getEType() == NUMBER) {
+            cout << "Result is " << ((ExpressionNumber*)result)->getNumber() << endl;
+        } else {
+            cout<<"6";
+            throw INFIX_FORMAT_ERROR;
+        }
+    } else {
+        cout<<"7";
+        throw INFIX_FORMAT_ERROR;
+    }
+}
+
+
+
 int main() {
     try {
         list<ExpressionPart *> expressions = readExpr();
         showExpr(expressions);
-        evalPostfixExpr(expressions);
+        evalPrefixExpr(expressions);
     }
+
+
     catch (string s) {
         cerr << s << endl;
     }
